@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  postgres: 
+    image: postgres:15
+    container_name: creditxai_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: creditxai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - creditxai_net
+
+  datacollector:
+    build: ../services/datacollector
+    container_name: datacollector_service
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/creditxai
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - creditxai_net
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonar
+    depends_on:
+      - sonar_db
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar_db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar123
+    ports:
+      - "9000:9000"
+    networks:
+      - creditxai_net
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+
+  sonar_db:
+    image: postgres:15
+    container_name: sonar_db
+    restart: always
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar123
+      POSTGRES_DB: sonar
+    networks:
+      - creditxai_net
+    volumes:
+      - sonar_db_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  sonar_data:
+  sonar_extensions:
+  sonar_db_data:
+
+networks:
+  creditxai_net:
+    driver: bridge
+
