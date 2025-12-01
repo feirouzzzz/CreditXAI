@@ -44,9 +44,13 @@ jobs:
         working-directory: services/datacollector
         run: mvn clean verify
 
+      - name: Wait for SonarQube
+        run: sleep 60
+
       - name: Run SonarQube Analysis
         working-directory: services/datacollector
         env:
           SONAR_HOST_URL: http://localhost:9000
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: sqa_9652d8553453c57fb2c3af03d86cac370023c135
         run: mvn sonar:sonar -Dsonar.projectKey=datacollector
+
