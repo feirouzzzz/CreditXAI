@@ -40,11 +40,13 @@ jobs:
           java-version: '21'
           distribution: temurin
 
-      - name: Build & Test
+      - name: Build & Test (datacollector)
+        working-directory: services/datacollector
         run: mvn clean verify
 
       - name: Run SonarQube Analysis
+        working-directory: services/datacollector
         env:
           SONAR_HOST_URL: http://localhost:9000
-          SONAR_TOKEN: sqa_9652d8553453c57fb2c3af03d86cac370023c135
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn sonar:sonar -Dsonar.projectKey=datacollector
