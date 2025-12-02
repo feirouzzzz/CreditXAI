@@ -14,7 +14,7 @@
     <groupId>com.example</groupId>
     <artifactId>datacollector</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>datacollector</name>
+    <name>service1_datacollector</name>
 
     <properties>
         <java.version>21</java.version>
