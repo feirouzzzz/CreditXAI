@@ -130,7 +130,7 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 | Développement Backend     | 2 semaines | API, DB, Auth, logging                         |
 | Développement Flutter     | 2 semaines | Formulaire, score, graphiques SHAP, dashboard  |
 | DevOps & Tests            | 2 semaines | Docker, CI/CD, Selenium, JMeter, SonarQube     |
-| Intégration & Déploiement | 1 semaine  | Tests finaux, déploiement cloud, documentation |
+| Intégration & Déploiement | 1 semaine  | Tests finaux, documentation |
 
 ---
 
@@ -142,4 +142,5 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 * Pipeline DevOps fonctionnel et automatisé.
 * Tests unitaires et UI ≥ 95% de réussite.
 * Monitoring et reporting centralisés.
+
 
