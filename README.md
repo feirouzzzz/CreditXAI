@@ -1,36 +1,37 @@
-﻿---
+﻿
 
-# CreditXAI — Plateforme de scoring de crédit éthique avec IA explicable (XAI)
+# **CreditXAI-Mobile — Plateforme mobile de scoring de crédit éthique avec IA explicable (XAI)**
 
-> **Projet académique** – Développement d’une application web basée sur une **architecture microservices**, en appliquant les **normes et bonnes pratiques de développement** pour garantir la qualité du code et de l’interface utilisateur.
-> Objectif : prédire le score de crédit des candidats tout en garantissant une **IA explicable, éthique et testée**.
+Projet académique – Développement d’une **application mobile Flutter** avec backend FastAPI, appliquant les normes et bonnes pratiques pour garantir la qualité du code, l’interface utilisateur et l’explicabilité de l’IA.
+**Objectif** : prédire le score de crédit des candidats tout en assurant une IA explicable, éthique et testée.
 
 ---
 
 ## 📘 Sommaire
 
-1. [🎯 Objectif du projet](#-objectif-du-projet)
-2. [🏗️ Architecture & Microservices](#️-architecture--microservices)
-3. [👥 Organisation de l’équipe](#-organisation-de-léquipe)
-4. [💡 User Stories](#-user-stories)
-5. [📁 Structure du projet](#-structure-du-projet)
-6. [🧩 Technologies & Outils](#-technologies--outils)
-7. [⚙️ Installation & Exécution](#️-installation--exécution)
-8. [🧪 Assurance Qualité & Tests](#-assurance-qualité--tests)
-9. [📅 Planning & Méthodologie Agile](#-planning--méthodologie-agile)
-10. [📄 Livrables & Délais](#-livrables--délais)
-11. [🎓 Présentation finale](#-présentation-finale)
-12. [📞 Contacts encadrants](#-contacts-encadrants)
+* 🎯 Objectif du projet
+* 🏗️ Architecture & Microservices
+* 👥 Organisation de l’équipe
+* 💡 User Stories
+* 📁 Structure du projet
+* 🧩 Technologies & Outils
+* ⚙️ Installation & Exécution
+* 🧪 Assurance Qualité & Tests
+* 📅 Planning & Méthodologie Agile
+* 📄 Livrables & Délais
+* 🎓 Présentation finale
+* 📞 Contacts encadrants
 
 ---
 
 ## 🎯 Objectif du projet
 
-**CreditXAI** a pour objectif :
+CreditXAI-Mobile a pour objectif :
 
-- Prédire la probabilité de défaut d’un candidat au crédit via un **modèle IA explicable**.
-- Fournir des **explications interprétables** pour chaque décision afin d’assurer l’éthique et la transparence.
-- Appliquer les **bonnes pratiques de développement**, tests et CI/CD pour garantir la **qualité du produit final**.
+* Prédire la probabilité de défaut d’un candidat au crédit via un **modèle IA explicable**.
+* Fournir des **explications interprétables (SHAP)** pour chaque décision afin d’assurer **l’éthique et la transparence**.
+* Développer une **application mobile Flutter** ergonomique et intuitive.
+* Appliquer les bonnes pratiques de **développement, tests et CI/CD** pour garantir la qualité du produit final.
 
 ---
 
@@ -39,63 +40,56 @@
 ### 🧩 Schéma global
 
 ```
-DataCollector → Preprocessor → ModelTrainer → Evaluator → Deployer
-                      ↑                 ↓
-                HyperOpt ← Orchestrator → Dashboard
+[Flutter App] <--HTTPS--> [FastAPI Backend] <--Joblib ML Model + SHAP--> [PostgreSQL DB]
 ```
 
-| Microservice      | Stack principale             | Description                                               |
-| ----------------- | ---------------------------- | --------------------------------------------------------- |
-| **DataCollector** | Spring Boot + PostgreSQL     | Collecte et validation des données clients                |
-| **Preprocessor**  | Python + Pandas              | Prétraitement et nettoyage des données                    |
-| **ModelTrainer**  | Scikit-learn + XAI libraries | Entraînement du modèle et calcul des scores explicables   |
-| **Evaluator**     | Python + Plotly              | Visualisation et comparaison des métriques de performance |
-| **HyperOpt**      | Optuna + Redis               | Optimisation automatique des hyperparamètres              |
-| **Deployer**      | Flask + Docker               | Déploiement des modèles via API REST                      |
-| **Orchestrator**  | Node.js + NATS               | Orchestration asynchrone des pipelines                    |
-| **Dashboard**     | React + Chart.js             | Interface visuelle pour les métriques et scores           |
+### Microservice / Composant
+
+| Composant          | Stack principale        | Description                                             |
+| ------------------ | ----------------------- | ------------------------------------------------------- |
+| Flutter Mobile App | Flutter + Dart          | Formulaire crédit, affichage score, graphiques SHAP     |
+| FastAPI Backend    | Python + FastAPI        | Endpoints `/score`, `/explain`, `/health`               |
+| ML Model           | Scikit-learn + SHAP     | Logistic Regression / RandomForest + XAI explainability |
+| Database           | PostgreSQL              | Stockage logs et requêtes utilisateurs                  |
+| DevOps / CI/CD     | Docker + GitHub Actions | Intégration, tests automatiques et déploiement cloud    |
 
 ---
 
 ## 👥 Organisation de l’équipe
 
-| Rôle                           | Nom        | Responsabilités principales                        |
-| ------------------------------ | ---------- | -------------------------------------------------- |
-| **Tech Lead / Architecte**     | Personne A | Architecture microservices, orchestrateur, CI/CD   |
-| **Data & ML Engineer**         | Personne B | ModelTrainer, HyperOpt, tests unitaires JUnit      |
-| **Full-Stack & DevOps**        | Personne C | Dashboard, Docker, orchestration, CI/CD            |
-| **QA / Tests & Documentation** | Personne D | Selenium, JMeter, SonarQube, documentation, Trello |
+| Rôle                 | Nom      | Responsabilités principales                                           |
+| -------------------- | -------- | --------------------------------------------------------------------- |
+| ML Engineer          | Membre 1 | Dataset, preprocessing, modèle ML, SHAP, fairness                     |
+| Backend Developer    | Membre 2 | FastAPI endpoints, logs, JWT Auth, tests API                          |
+| Flutter Developer    | Membre 3 | UI formulaire, API calls, affichage score, dashboard                  |
+| DevOps / Integration | Membre 4 | Docker backend, CI/CD, intégration Flutter, tests finaux, déploiement |
 
 ---
 
 ## 💡 User Stories
 
-| ID   | User Story                                                                                   |
-| ---- | -------------------------------------------------------------------------------------------- |
-| US01 | En tant qu’utilisateur, je veux saisir mes informations pour obtenir un score de crédit.     |
-| US02 | Je veux que le système nettoie et prétraite automatiquement mes données.                     |
-| US03 | Je veux que le modèle prédit mon score de manière fiable et explicable.                      |
-| US04 | Je veux visualiser les métriques et rapports sur un dashboard web.                           |
-| US05 | Je veux que l’application soit testée et performante sur plusieurs navigateurs et scénarios. |
+| ID   | User Story                                                                               |
+| ---- | ---------------------------------------------------------------------------------------- |
+| US01 | En tant qu’utilisateur, je veux saisir mes informations pour obtenir un score de crédit. |
+| US02 | Le système doit nettoyer et prétraiter automatiquement mes données.                      |
+| US03 | Le modèle prédit mon score de manière fiable et explicable.                              |
+| US04 | Je veux visualiser mes scores et explications SHAP dans l’application mobile.            |
+| US05 | L’application doit être testée, performante et sécurisée.                                |
 
 ---
 
 ## 📁 Structure du projet
 
 ```
-📦 CreditXAI/
- ┣ 📁 services/
- ┃ ┣ 📁 data-collector/
- ┃ ┣ 📁 preprocessor/
- ┃ ┣ 📁 model-trainer/
- ┃ ┣ 📁 evaluator/
- ┃ ┣ 📁 hyperopt/
- ┃ ┣ 📁 deployer/
- ┣ 📁 orchestrator/
- ┣ 📁 dashboard/
+📦 CreditXAI-Mobile/
+ ┣ 📁 flutter_app/
+ ┣ 📁 backend_fastapi/
+ ┣ 📁 ml_model/
+ ┣ 📁 database/
+ ┣ 📁 docker/
  ┣ 📁 tests/
  ┃ ┣ 📁 unit/
- ┃ ┣ 📁 functional/
+ ┃ ┣ 📁 integration/
  ┣ 📁 docs/
  ┣ 📜 docker-compose.yml
  ┣ 📜 README.md
@@ -105,129 +99,91 @@ DataCollector → Preprocessor → ModelTrainer → Evaluator → Deployer
 
 ## 🧩 Technologies & Outils
 
-| Catégorie              | Outils / Technologies        |
-| ---------------------- | ---------------------------- |
-| **Langages**           | Java, Python, Node.js, React |
-| **Bases de données**   | PostgreSQL, Redis            |
-| **Stockage fichiers**  | Local / MinIO                |
-| **ML & XAI**           | Scikit-learn, SHAP, Optuna   |
-| **Orchestration**      | NATS                         |
-| **CI/CD**              | GitHub Actions, Jenkins      |
-| **Tests unitaires**    | JUnit, Pytest                |
-| **Tests fonctionnels** | Selenium                     |
-| **Tests performance**  | JMeter                       |
-| **Analyse qualité**    | SonarQube                    |
-| **Containerisation**   | Docker, docker-compose       |
-| **Gestion projet**     | JIRA, Trello                 |
+| Catégorie          | Outils / Technologies                          |
+| ------------------ | ---------------------------------------------- |
+| Langages           | Dart (Flutter), Python                         |
+| Base de données    | PostgreSQL                                     |
+| ML & XAI           | Scikit-learn, SHAP, Joblib                     |
+| CI/CD              | GitHub Actions, Docker                         |
+| Tests unitaires    | Pytest, Flutter test                           |
+| Tests fonctionnels | Selenium (optionnel), tests end-to-end Flutter |
+| Containerisation   | Docker, docker-compose                         |
+| Gestion projet     | Jira, Trello                                   |
 
 ---
 
 ## ⚙️ Installation & Exécution
 
-1. Cloner le dépôt :
-
 ```bash
-git clone https://github.com/<user>/CreditXAI.git
-cd CreditXAI
-```
+# Cloner le dépôt
+git clone https://github.com/<user>/CreditXAI-Mobile.git
+cd CreditXAI-Mobile
 
-2. Construire et lancer les services avec Docker :
-
-```bash
+# Lancer backend + ML model
 docker-compose up --build
+
+# Lancer Flutter app
+cd flutter_app
+flutter pub get
+flutter run
 ```
 
-3. Accéder aux composants :
-   | Service | URL |
-   |---------|-----|
-   | Dashboard | [http://localhost:3000](http://localhost:3000) |
-   | API Orchestrator | [http://localhost:8080](http://localhost:8080) |
-   | MinIO | [http://localhost:9000](http://localhost:9000) |
+**Composants accessibles :**
+
+| Composant       | URL / Port                                     |
+| --------------- | ---------------------------------------------- |
+| FastAPI Backend | [http://localhost:8000](http://localhost:8000) |
+| Flutter App     | Emulator / APK / TestFlight                    |
+| PostgreSQL      | localhost:5432                                 |
 
 ---
 
 ## 🧪 Assurance Qualité & Tests
 
-### Plan d’Assurance Qualité (PAQ)
-
-- Suivi des standards de code et bonnes pratiques.
-- Revue de code obligatoire avant chaque merge.
-- Analyse statique avec **SonarQube** (bugs, vulnérabilités, code smells).
-- Couverture de tests unitaires ≥ 80% avec **JUnit/Pytest**.
-- Tests fonctionnels automatisés avec **Selenium** sur plusieurs navigateurs.
-- Tests de performance avec **JMeter** et monitoring serveur.
-
-### CI/CD & Automatisation
-
-- Exécution automatique des tests unitaires et fonctionnels via GitHub Actions / Jenkins.
-- Lancer SonarScanner après chaque build pour analyser la qualité du code.
-- Rapports automatisés sur couverture, bugs et vulnérabilités.
+* Suivi des standards de code et bonnes pratiques Flutter / Python
+* Revue de code obligatoire avant chaque merge
+* Analyse statique avec SonarQube (bugs, vulnérabilités, code smells)
+* Couverture de tests unitaires ≥ 80%
+* Tests end-to-end : Flutter + API calls
+* CI/CD : tests automatiques à chaque push
 
 ---
 
 ## 📅 Planning & Méthodologie Agile
 
-| Sprint | Durée      | Objectif                                                    |
-| ------ | ---------- | ----------------------------------------------------------- |
-| 1      | 1 semaine  | Setup Git, Docker, Trello/JIRA, architecture microservices  |
-| 2      | 2 semaines | Développement DataCollector & Preprocessor                  |
-| 3      | 2 semaines | ModelTrainer, HyperOpt & Evaluator                          |
-| 4      | 1 semaine  | Deployer, Dashboard & CI/CD                                 |
-| 5      | 1 semaine  | Tests unitaires, Selenium, JMeter, SonarQube, rapport final |
+| Sprint | Durée         | Objectif                                                                             |
+| ------ | ------------- | ------------------------------------------------------------------------------------ |
+| 1      | 03/11 → 17/11 | Dataset, preprocessing, ML baseline, SHAP, setup backend & Flutter                   |
+| 2      | 18/11 → 02/12 | Endpoints `/score` & `/explain`, JWT Auth, logs, formulaire Flutter, intégration API |
+| 3      | 03/12 → 14/12 | Dashboard, tests end-to-end, Docker, CI/CD, documentation, slides, vidéo démo        |
 
 ---
 
 ## 📄 Livrables & Délais
 
-| Livrable                       | Date limite |
-| ------------------------------ | ----------- |
-| Plan d’Assurance Qualité (PAQ) | 15/12/2025  |
-| Diagramme de Gantt + JIRA      | 15/12/2025  |
-| Code source complet            | 15/12/2025  |
-| Rapport d’analyse SonarQube    | 15/12/2025  |
-| Rapport tests Selenium/JMeter  | 15/12/2025  |
-
-⚠️ **Pénalité de retard** : 1 point par jour après la date limite.
+| Livrable                                | Date limite |
+| --------------------------------------- | ----------- |
+| Code source complet (Flutter + Backend) | 14/12/2025  |
+| Modèle ML + SHAP                        | 14/12/2025  |
+| Docker + CI/CD pipeline                 | 14/12/2025  |
+| Documentation + guide utilisateur       | 14/12/2025  |
+| Slides soutenance + vidéo démo          | 14/12/2025  |
 
 ---
 
 ## 🎓 Présentation finale
 
-### Points clés à démontrer :
+Points clés à démontrer :
 
-- Architecture microservices fonctionnelle
-- Pipeline de scoring crédit automatisé et explicable
-- API documentées
-- Dashboard interactif
-- Logs et suivi MLflow
-- Tests unitaires, fonctionnels et performance réussis
-- Analyse de qualité de code SonarQube
+* Application Flutter mobile fonctionnelle
+* Backend FastAPI avec scoring et explications XAI
+* Dashboard simple pour visualisation des métriques
+* Logs et suivi des prédictions
+* Tests unitaires, fonctionnels et CI/CD réussis
 
-### Livrables
+**Livrables à présenter :**
 
-- Dépôt GitHub + Dockerfiles
-- Documentation Swagger/OpenAPI
-- Rapports qualité et tests
-- Démo vidéo (5 min)
-- Slides de soutenance
-
----
-
-## 📞 Contacts encadrants
-
-| Nom          | Email                                             |
-| ------------ | ------------------------------------------------- |
-| O. Ouedrhiri | [O.ouedrhiri@emsi.ma](mailto:O.ouedrhiri@emsi.ma) |
-| H. Tabbaa    | [H.Tabbaa@emsi.ma](mailto:H.Tabbaa@emsi.ma)       |
-| M. Lachgar   | [lachgar.m@gmail.com](mailto:lachgar.m@gmail.com) |
-
----
-
-
-| Microservice      | Stack principale             | Description                                                                                  |
-| ----------------- | ---------------------------- | -------------------------------------------------------------------------------------------- |
-| **DataCollector** | Spring Boot + PostgreSQL     | Collecte et validation des données clients                                                   |
-| **Preprocessor**  | Python + Pandas              | Prétraitement et nettoyage des données                                                       |
-| **ModelTrainer**  | Scikit-learn + XAI libraries | Entraînement du modèle, scoring explicable, optimisation hyperparamètres intégrée (HyperOpt) |
-| **Deployer/API**  | Flask + Docker               | Exposition du modèle via API REST, intégration Evaluator pour métriques                      |
-
+* Dépôt GitHub complet
+* Dockerfiles + CI/CD
+* Documentation et guide utilisateur
+* Slides + vidéo démo (~5 min)
