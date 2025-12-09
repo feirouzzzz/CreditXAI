@@ -1,189 +1,145 @@
 ﻿
 
-# **CreditXAI-Mobile — Plateforme mobile de scoring de crédit éthique avec IA explicable (XAI)**
+# 📄 Cahier des Charges — Projet Flutter : Application de Scoring de Crédit Éthique (XAI)
 
-Projet académique – Développement d’une **application mobile Flutter** avec backend FastAPI, appliquant les normes et bonnes pratiques pour garantir la qualité du code, l’interface utilisateur et l’explicabilité de l’IA.
-**Objectif** : prédire le score de crédit des candidats tout en assurant une IA explicable, éthique et testée.
 
----
 
-## 📘 Sommaire
-
-* 🎯 Objectif du projet
-* 🏗️ Architecture & Microservices
-* 👥 Organisation de l’équipe
-* 💡 User Stories
-* 📁 Structure du projet
-* 🧩 Technologies & Outils
-* ⚙️ Installation & Exécution
-* 🧪 Assurance Qualité & Tests
-* 📅 Planning & Méthodologie Agile
-* 📄 Livrables & Délais
-* 🎓 Présentation finale
-* 📞 Contacts encadrants
+* Driss — ML Engineer
+* Soulaiman — Backend Developer
+* Zakaria — Flutter Developer
+* Feirouz — DevOps & CI/CD
 
 ---
 
-## 🎯 Objectif du projet
+## 1. **Contexte et Objectifs du Projet**
 
-CreditXAI-Mobile a pour objectif :
+**Contexte :**
+Avec la digitalisation des services financiers, il devient crucial d’évaluer la solvabilité des utilisateurs de manière fiable, éthique et explicable. L’usage de l’IA peut améliorer la précision des scores de crédit, mais introduit des risques de biais et d’opacité dans les décisions.
 
-* Prédire la probabilité de défaut d’un candidat au crédit via un **modèle IA explicable**.
-* Fournir des **explications interprétables (SHAP)** pour chaque décision afin d’assurer **l’éthique et la transparence**.
-* Développer une **application mobile Flutter** ergonomique et intuitive.
-* Appliquer les bonnes pratiques de **développement, tests et CI/CD** pour garantir la qualité du produit final.
+**Objectifs :**
 
----
-
-## 🏗️ Architecture & Microservices
-
-### 🧩 Schéma global
-
-```
-[Flutter App] <--HTTPS--> [FastAPI Backend] <--Joblib ML Model + SHAP--> [PostgreSQL DB]
-```
-
-### Microservice / Composant
-
-| Composant          | Stack principale        | Description                                             |
-| ------------------ | ----------------------- | ------------------------------------------------------- |
-| Flutter Mobile App | Flutter + Dart          | Formulaire crédit, affichage score, graphiques SHAP     |
-| FastAPI Backend    | Python + FastAPI        | Endpoints `/score`, `/explain`, `/health`               |
-| ML Model           | Scikit-learn + SHAP     | Logistic Regression / RandomForest + XAI explainability |
-| Database           | PostgreSQL              | Stockage logs et requêtes utilisateurs                  |
-| DevOps / CI/CD     | Docker + GitHub Actions | Intégration, tests automatiques et déploiement cloud    |
+* Créer un **modèle de scoring de crédit fiable et éthique**.
+* Fournir des **explications transparentes** pour chaque prédiction via SHAP.
+* Développer une **application mobile Flutter intuitive** pour les utilisateurs et les analystes.
+* Fournir un **backend sécurisé et robuste** avec API exposée.
+* Mettre en place un **pipeline DevOps complet** avec CI/CD, tests automatisés et monitoring.
 
 ---
 
-## 👥 Organisation de l’équipe
+## 2. **Périmètre du Projet**
 
-| Rôle                 | Nom      | Responsabilités principales                                           |
-| -------------------- | -------- | --------------------------------------------------------------------- |
-| ML Engineer          | Membre 1 | Dataset, preprocessing, modèle ML, SHAP, fairness                     |
-| Backend Developer    | Membre 2 | FastAPI endpoints, logs, JWT Auth, tests API                          |
-| Flutter Developer    | Membre 3 | UI formulaire, API calls, affichage score, dashboard                  |
-| DevOps / Integration | Membre 4 | Docker backend, CI/CD, intégration Flutter, tests finaux, déploiement |
+**Inclus :**
 
----
+* Collecte et préparation de datasets financiers anonymisés.
+* Entraînement et export d’un modèle ML (Logistic Regression + RandomForest).
+* Explication des prédictions via SHAP.
+* API FastAPI sécurisée (JWT, audit, logs).
+* Application mobile Flutter (formulaire crédit, affichage score, graphiques SHAP, dashboard analyste).
+* CI/CD avec tests automatisés (unitaires, UI Selenium, performance JMeter).
+* Qualité du code et monitoring (SonarQube, Allure).
+* Déploiement cloud (Railway / Render / AWS).
 
-## 💡 User Stories
+**Exclus :**
 
-| ID   | User Story                                                                               |
-| ---- | ---------------------------------------------------------------------------------------- |
-| US01 | En tant qu’utilisateur, je veux saisir mes informations pour obtenir un score de crédit. |
-| US02 | Le système doit nettoyer et prétraiter automatiquement mes données.                      |
-| US03 | Le modèle prédit mon score de manière fiable et explicable.                              |
-| US04 | Je veux visualiser mes scores et explications SHAP dans l’application mobile.            |
-| US05 | L’application doit être testée, performante et sécurisée.                                |
+* Gestion de crédit réel en production.
+* Collecte de données personnelles sensibles sans anonymisation.
+* Prédiction pour d’autres types de scoring non liés au crédit.
 
 ---
 
-## 📁 Structure du projet
+## 3. **Fonctionnalités Principales**
 
-```
-📦 CreditXAI-Mobile/
- ┣ 📁 flutter_app/
- ┣ 📁 backend_fastapi/
- ┣ 📁 ml_model/
- ┣ 📁 database/
- ┣ 📁 docker/
- ┣ 📁 tests/
- ┃ ┣ 📁 unit/
- ┃ ┣ 📁 integration/
- ┣ 📁 docs/
- ┣ 📜 docker-compose.yml
- ┣ 📜 README.md
-```
-
----
-
-## 🧩 Technologies & Outils
-
-| Catégorie          | Outils / Technologies                          |
-| ------------------ | ---------------------------------------------- |
-| Langages           | Dart (Flutter), Python                         |
-| Base de données    | PostgreSQL                                     |
-| ML & XAI           | Scikit-learn, SHAP, Joblib                     |
-| CI/CD              | GitHub Actions, Docker                         |
-| Tests unitaires    | Pytest, Flutter test                           |
-| Tests fonctionnels | Selenium (optionnel), tests end-to-end Flutter |
-| Containerisation   | Docker, docker-compose                         |
-| Gestion projet     | Jira, Trello                                   |
+| Module             | Fonctionnalité           | Description                                                     |
+| ------------------ | ------------------------ | --------------------------------------------------------------- |
+| **IA / ML**        | Modèle de scoring        | Entraînement ML fiable avec Logistic Regression et RandomForest |
+|                    | Explication SHAP         | Graphiques et interprétations simplifiées pour l’utilisateur    |
+|                    | Fairness                 | Mesure et réduction des biais dans les prédictions              |
+| **Backend**        | API `/score`             | Endpoint pour calculer le score crédit                          |
+|                    | API `/explain`           | Endpoint pour renvoyer l’explication SHAP                       |
+|                    | Authentification JWT     | Sécurisation des endpoints sensibles                            |
+|                    | Logging et audit         | Historisation des requêtes et actions                           |
+| **Mobile Flutter** | Formulaire utilisateur   | Saisie des informations nécessaires au scoring                  |
+|                    | Affichage score          | Carte de score avec interprétation simple                       |
+|                    | Graphiques SHAP          | Visualisation explicable des facteurs influents                 |
+|                    | Dashboard analyste       | Vue globale des scores et performances (optionnel)              |
+| **DevOps & QA**    | Conteneurisation Docker  | Backend + DB + ML service                                       |
+|                    | Pipeline CI/CD           | Build, tests unitaires, génération APK, déploiement automatique |
+|                    | Tests UI Selenium        | Automatisation des scénarios frontend                           |
+|                    | Tests Performance JMeter | Validation sous charge et stress tests                          |
+|                    | Qualité code SonarQube   | Analyse continue et correction des anomalies                    |
+|                    | Monitoring & Reporting   | Dashboard Allure, notifications Slack/Teams                     |
 
 ---
 
-## ⚙️ Installation & Exécution
+## 4. **Contraintes Techniques**
 
-```bash
-# Cloner le dépôt
-git clone https://github.com/<user>/CreditXAI-Mobile.git
-cd CreditXAI-Mobile
-
-# Lancer backend + ML model
-docker-compose up --build
-
-# Lancer Flutter app
-cd flutter_app
-flutter pub get
-flutter run
-```
-
-**Composants accessibles :**
-
-| Composant       | URL / Port                                     |
-| --------------- | ---------------------------------------------- |
-| FastAPI Backend | [http://localhost:8000](http://localhost:8000) |
-| Flutter App     | Emulator / APK / TestFlight                    |
-| PostgreSQL      | localhost:5432                                 |
+* **Backend :** FastAPI, PostgreSQL
+* **ML :** Python, scikit-learn, SHAP
+* **Frontend :** Flutter, Dart
+* **DevOps :** Docker, Docker-Compose, GitHub Actions, Railway/Render/AWS
+* **Tests :** Pytest, Selenium, JMeter, Allure
+* **Qualité :** SonarQube, badges de qualité automatique
 
 ---
 
-## 🧪 Assurance Qualité & Tests
+## 5. **Contraintes Fonctionnelles et Non-Fonctionnelles**
 
-* Suivi des standards de code et bonnes pratiques Flutter / Python
-* Revue de code obligatoire avant chaque merge
-* Analyse statique avec SonarQube (bugs, vulnérabilités, code smells)
-* Couverture de tests unitaires ≥ 80%
-* Tests end-to-end : Flutter + API calls
-* CI/CD : tests automatiques à chaque push
+**Fonctionnelles :**
 
----
+* L’API doit être sécurisée (authentification JWT obligatoire).
+* L’application doit être compatible Android/iOS.
+* Les prédictions doivent être explicables et traçables.
 
-## 📅 Planning & Méthodologie Agile
+**Non-Fonctionnelles :**
 
-| Sprint | Durée         | Objectif                                                                             |
-| ------ | ------------- | ------------------------------------------------------------------------------------ |
-| 1      | 03/11 → 17/11 | Dataset, preprocessing, ML baseline, SHAP, setup backend & Flutter                   |
-| 2      | 18/11 → 02/12 | Endpoints `/score` & `/explain`, JWT Auth, logs, formulaire Flutter, intégration API |
-| 3      | 03/12 → 14/12 | Dashboard, tests end-to-end, Docker, CI/CD, documentation, slides, vidéo démo        |
+* Temps de réponse backend ≤ 1s pour scoring.
+* Disponibilité ≥ 99% pour le service API.
+* CI/CD entièrement automatisé.
+* Centralisation des logs et KPI pour monitoring.
 
 ---
 
-## 📄 Livrables & Délais
+## 6. **Livrables**
 
-| Livrable                                | Date limite |
-| --------------------------------------- | ----------- |
-| Code source complet (Flutter + Backend) | 14/12/2025  |
-| Modèle ML + SHAP                        | 14/12/2025  |
-| Docker + CI/CD pipeline                 | 14/12/2025  |
-| Documentation + guide utilisateur       | 14/12/2025  |
-| Slides soutenance + vidéo démo          | 14/12/2025  |
+1. Modèle ML exporté (.joblib) avec documentation.
+2. Backend FastAPI sécurisé et documenté (Swagger/Redoc).
+3. Application Flutter fonctionnelle avec UI et intégration API.
+4. Pipeline DevOps complet avec CI/CD, tests Selenium & JMeter.
+5. Rapport de qualité de code (SonarQube) et tableau de monitoring Allure.
+6. Documentation complète pour installation, usage et maintenance.
 
 ---
 
-## 🎓 Présentation finale
+## 7. **Répartition des Tâches**
 
-Points clés à démontrer :
+| Membre    | Rôle              | Responsabilités                                            |
+| --------- | ----------------- | ---------------------------------------------------------- |
+| Driss     | ML Engineer       | Dataset, Modèle ML, SHAP, Fairness                         |
+| Soulaiman | Backend Developer | API FastAPI, Auth JWT, Logs, DB                            |
+| Zakaria   | Flutter Developer | Mobile App, UI/UX, API Integration                         |
+| Feirouz   | DevOps            | Docker, CI/CD, Tests automatisés, Monitoring, Qualité Code |
 
-* Application Flutter mobile fonctionnelle
-* Backend FastAPI avec scoring et explications XAI
-* Dashboard simple pour visualisation des métriques
-* Logs et suivi des prédictions
-* Tests unitaires, fonctionnels et CI/CD réussis
+---
 
-**Livrables à présenter :**
+## 8. **Planning Prévisionnel**
 
-* Dépôt GitHub complet
-* Dockerfiles + CI/CD
-* Documentation et guide utilisateur
-* Slides + vidéo démo (~5 min)
+| Phase                     | Durée      | Description                                    |
+| ------------------------- | ---------- | ---------------------------------------------- |
+| Analyse & Design          | 1 semaine  | Figma, architecture ML/Backend/Flutter         |
+| Développement ML          | 2 semaines | Collecte dataset, entraînement, SHAP, fairness |
+| Développement Backend     | 2 semaines | API, DB, Auth, logging                         |
+| Développement Flutter     | 2 semaines | Formulaire, score, graphiques SHAP, dashboard  |
+| DevOps & Tests            | 2 semaines | Docker, CI/CD, Selenium, JMeter, SonarQube     |
+| Intégration & Déploiement | 1 semaine  | Tests finaux, déploiement cloud, documentation |
+
+---
+
+## 9. **Critères de Réussite**
+
+* Modèle ML précis et explicable (SHAP).
+* API sécurisée et stable.
+* Application mobile intuitive et responsive.
+* Pipeline DevOps fonctionnel et automatisé.
+* Tests unitaires et UI ≥ 95% de réussite.
+* Monitoring et reporting centralisés.
+
