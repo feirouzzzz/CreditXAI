@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres: 
     image: postgres:15
-    container_name: creditxai_postgres
+    container_name: service1_db
     restart: always
     environment:
       POSTGRES_USER: admin
@@ -18,7 +18,7 @@ services:
 
   datacollector:
     build: ../services/datacollector
-    container_name: datacollector_service
+    container_name: service1_datacollector
     restart: on-failure
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/creditxai
@@ -60,6 +60,29 @@ services:
       - creditxai_net
     volumes:
       - sonar_db_data:/var/lib/postgresql/data
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - creditxai_net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - creditxai_net
+    depends_on:
+      - prometheus
 
 volumes:
   postgres_data:
