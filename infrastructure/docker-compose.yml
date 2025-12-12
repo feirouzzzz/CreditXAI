@@ -2,30 +2,42 @@ version: "3.9"
 
 services:
   # ======================================================
-  #  PostgreSQL (Backend & ML)
+  #  PostgreSQL (Backend)
   # ======================================================
   postgres:
     image: postgres:15
-    container_name: creditxai_postgres
+    container_name: creditxai_db
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: creditxai
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - creditxai_net
 
   # ======================================================
-  #  SonarQube (Code Quality)
+  #  MinIO Storage
+  # ======================================================
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    networks:
+      - creditxai_net
+
+  # ======================================================
+  #  SonarQube
   # ======================================================
   sonarqube:
     image: sonarqube:community
@@ -42,7 +54,7 @@ services:
       - sonar_data:/opt/sonarqube/data
       - sonar_extensions:/opt/sonarqube/extensions
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000" ]
+      test: ["CMD", "curl", "-f", "http://localhost:9000"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -50,7 +62,7 @@ services:
       - creditxai_net
 
   # ======================================================
-  #  Sonar Database
+  #  Sonar Postgres
   # ======================================================
   sonar_db:
     image: postgres:15
@@ -63,7 +75,7 @@ services:
     volumes:
       - sonar_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U sonar" ]
+      test: ["CMD-SHELL", "pg_isready -U sonar"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -71,7 +83,7 @@ services:
       - creditxai_net
 
   # ======================================================
-  #  Prometheus Monitoring
+  #  Prometheus
   # ======================================================
   prometheus:
     image: prom/prometheus:latest
@@ -86,7 +98,7 @@ services:
       - creditxai_net
 
   # ======================================================
-  #  Grafana Dashboards
+  #  Grafana
   # ======================================================
   grafana:
     image: grafana/grafana:latest
@@ -104,7 +116,7 @@ services:
       - creditxai_net
 
 # ======================================================
-# VOLUMES
+#  VOLUMES
 # ======================================================
 volumes:
   postgres_data:
@@ -112,10 +124,11 @@ volumes:
   sonar_extensions:
   sonar_db_data:
   grafana_data:
+  miniodata:
 
-    # ======================================================
-    # NETWORKS
-    # ======================================================
+# ======================================================
+#  NETWORKS
+# ======================================================
 networks:
   creditxai_net:
     driver: bridge

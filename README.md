@@ -99,48 +99,29 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 
 ---
 
-## 6. **Livrables**
+| Component / Class            | Technologies / Tools                                                      |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| Flutter Mobile App (Flutter) | Flutter, Dart, Provider, Dio, fl_chart                                    |
+| Backend API                  | FastAPI, Pydantic, Swagger, Docker, Keycloak                              |
+| Machine Learning (ML)        | Python, XGBoost, LightGBM, scikit-learn, MLflow, SHAP, LIME, DiCE         |
+| Data Mining (Data Mining)    | Python, pandas, numpy, matplotlib, seaborn, Airflow, Feast                |
+| Database / Feature Store     | PostgreSQL, MySQL, Redis, S3, Alembic                                     |
+| Quality Management (QM)      | pytest, SonarQube, GitHub Actions, Fairlearn, AIF360, Grafana, Prometheus |
+| Explainable AI               | SHAP, LIME, DiCE, Python NLP                                              |
+| Monitoring / Audit           | ELK Stack, Prometheus, Grafana, OpenTelemetry                             |
 
-1. Modèle ML exporté (.joblib) avec documentation.
-2. Backend FastAPI sécurisé et documenté (Swagger/Redoc).
-3. Application Flutter fonctionnelle avec UI et intégration API.
-4. Pipeline DevOps complet avec CI/CD, tests Selenium & JMeter.
-5. Rapport de qualité de code (SonarQube) et tableau de monitoring Allure.
-6. Documentation complète pour installation, usage et maintenance.
 
 ---
 
-## 7. **Répartition des Tâches**
+## Explanation 
 
-| Membre    | Rôle              | Responsabilités                                            |
-| --------- | ----------------- | ---------------------------------------------------------- |
-| Driss     | ML Engineer       | Dataset, Modèle ML, SHAP, Fairness                         |
-| Soulaiman | Backend Developer | API FastAPI, Auth JWT, Logs, DB                            |
-| Zakaria   | Flutter Developer | Mobile App, UI/UX, API Integration                         |
-| Feirouz   | DevOps            | Docker, CI/CD, Tests automatisés, Monitoring, Qualité Code |
-
----
-
-## 8. **Planning Prévisionnel**
-
-| Phase                     | Durée      | Description                                    |
-| ------------------------- | ---------- | ---------------------------------------------- |
-| Analyse & Design          | 1 semaine  | Figma, architecture ML/Backend/Flutter         |
-| Développement ML          | 2 semaines | Collecte dataset, entraînement, SHAP, fairness |
-| Développement Backend     | 2 semaines | API, DB, Auth, logging                         |
-| Développement Flutter     | 2 semaines | Formulaire, score, graphiques SHAP, dashboard  |
-| DevOps & Tests            | 2 semaines | Docker, CI/CD, Selenium, JMeter, SonarQube     |
-| Intégration & Déploiement | 1 semaine  | Tests finaux, documentation |
-
----
-
-## 9. **Critères de Réussite**
-
-* Modèle ML précis et explicable (SHAP).
-* API sécurisée et stable.
-* Application mobile intuitive et responsive.
-* Pipeline DevOps fonctionnel et automatisé.
-* Tests unitaires et UI ≥ 95% de réussite.
-* Monitoring et reporting centralisés.
-
-
+### Backend API: Workflow / Sequence
+```
+Flutter app sends POST /score request with applicant features.
+Backend API validates input using Pydantic schemas.
+Feature Fetcher pulls additional features from database / feature store.
+Scoring Service calls ML model for prediction.
+Explanation Service calls SHAP/LIME/DiCE for explanation.
+Audit Service stores request, prediction, and explanation in DB.
+API returns JSON response to Flutter app.
+```
