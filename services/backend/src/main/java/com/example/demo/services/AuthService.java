@@ -6,7 +6,9 @@ import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,27 +81,40 @@ public class AuthService {
         return response;
     }
 
-    public Map<String, Object> verifyCin(Long userId, String cin) {
+    public Map<String, Object> verifyCin(Long userId, MultipartFile photo) {
 
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
-            return Map.of(
-                    "success", false,
-                    "message", "User not found"
-            );
+            return Map.of("success", false, "message", "User not found");
         }
 
-        user.setCin(cin);
-        user.setIdentityVerified(true);
-        userRepository.save(user);
+        if (photo == null || photo.isEmpty()) {
+            return Map.of("success", false, "message", "CIN photo is required");
+        }
 
-        return Map.of(
-                "success", true,
-                "message", "Identity verified successfully",
-                "id", user.getId(),
-                "identityVerified", true,
-                "token", jwtUtil.generateToken(user)
-        );
+        try {
+            // 📂 save locally (simple)
+            String uploadDir = "uploads/cin/";
+            new File(uploadDir).mkdirs();
+
+            String filePath = uploadDir + userId + "_" + photo.getOriginalFilename();
+            photo.transferTo(new File(filePath));
+
+            user.setCinPhoto(filePath);
+            user.setIdentityVerified(true); // ⚠️ for now auto-verify
+            userRepository.save(user);
+
+            return Map.of(
+                    "success", true,
+                    "message", "Identity verified successfully",
+                    "id", user.getId(),
+                    "identityVerified", true,
+                    "token", jwtUtil.generateToken(user)
+            );
+
+        } catch (Exception e) {
+            return Map.of("success", false, "message", "Photo upload failed");
+        }
     }
 }

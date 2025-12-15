@@ -3,6 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// ML API imports
+import 'services/ml_api_service.dart';
+import 'services/ai_service.dart';
+import 'models/prediction_result.dart';
+
 /// Simple models for the demo app.
 class CreditApplication {
   final String id;
@@ -68,7 +73,7 @@ class ApplicationsNotifier extends StateNotifier<List<CreditApplication>> {
 final latestScoreProvider = StateProvider<ScoreResult?>((ref) => null);
 
 /// Theme mode provider to toggle light/dark from the UI
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.dark);
 
 /// CTA variant provider: 0 = Variant A (neon-cyan), 1 = Variant B (warm-orange)
 final ctaVariantProvider = StateProvider<int>((ref) => 0);
@@ -103,3 +108,57 @@ ScoreResult computeScoreFromForm(Map<String, dynamic> form) {
 
   return ScoreResult(score: score, status: status, shapValues: shap);
 }
+
+/// Helper to save a score result as a credit application
+void saveScoreToHistory(WidgetRef ref, ScoreResult score, {double loanAmount = 5000}) {
+  final app = CreditApplication(
+    id: 'app-${DateTime.now().millisecondsSinceEpoch}',
+    amount: loanAmount,
+    date: DateTime.now(),
+    status: score.status,
+  );
+  ref.read(applicationsProvider.notifier).add(app);
+}
+
+// ========== ML API Providers ==========
+
+/// Provider for ML API Service (singleton)
+final mlApiServiceProvider = Provider<MLApiService>((ref) {
+  return MLApiService();
+});
+
+/// Provider for AI Service (singleton)
+final aiServiceProvider = Provider<AIService>((ref) {
+  final mlApiService = ref.watch(mlApiServiceProvider);
+  // Set useMockData to true for testing without backend
+  return AIService(mlApiService: mlApiService, useMockData: false);
+});
+
+/// Provider for model health status
+final modelHealthProvider = FutureProvider<bool>((ref) async {
+  final aiService = ref.watch(aiServiceProvider);
+  return aiService.checkModelHealth();
+});
+
+/// Provider for fairness metrics
+final fairnessMetricsProvider = FutureProvider<FairnessMetrics?>((ref) async {
+  final aiService = ref.watch(aiServiceProvider);
+  return aiService.getFairnessMetrics();
+});
+
+/// Provider for feature importance
+final featureImportanceProvider = FutureProvider<Map<String, double>>((ref) async {
+  final mlApiService = ref.watch(mlApiServiceProvider);
+  try {
+    return await mlApiService.getFeatureImportance();
+  } catch (e) {
+    print('Failed to get feature importance: $e');
+    return {};
+  }
+});
+
+/// Provider for current prediction state
+final currentPredictionProvider = StateProvider<PredictionResult?>((ref) => null);
+
+/// Provider to track if using mock data
+final useMockDataProvider = StateProvider<bool>((ref) => false);

@@ -27,4 +27,6 @@ public class User {
     private boolean identityVerified = false;
 
     private String cin;
+
+    private String cinPhoto;
 }

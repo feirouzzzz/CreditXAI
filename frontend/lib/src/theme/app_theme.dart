@@ -1,48 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Fintech color palette with neon accents and modern gradients
+/// Ethical AI Credit Scoring color palette - Dark teal & cyan theme
 class AppColors {
-  // Primary brand colors
-  static const blue = Color(0xFF1976D2);
-  static const deepBlue = Color(0xFF0D47A1);
-  static const teal = Color(0xFF006064);
-  static const darkTeal = Color(0xFF004D40);
-
+  // Primary brand colors - Dark teal background
+  static const darkBg = Color(0xFF0A1515);
+  static const darkBg2 = Color(0xFF0F1A1A);
+  static const darkTeal = Color(0xFF1A2A2A);
+  static const mediumTeal = Color(0xFF2A4040);
+  
+  // Cyan accent - Primary action color
+  static const primaryCyan = Color(0xFF00D9CC);
+  static const cyanLight = Color(0xFF33E6DB);
+  
+  // Blue accent
+  static const brightBlue = Color(0xFF0066FF);
+  
   // Status colors
-  static const green = Color(0xFF2E7D32);
-  static const red = Color(0xFFD32F2F);
-  static const orange = Color(0xFFF57C00);
-
-  // Neon accents
-  static const neonCyan = Color(0xFF00FFC3);
-  static const neonBlue = Color(0xFF00E6FF);
+  static const success = Color(0xFF10B981);
+  static const warning = Color(0xFFF59E0B);
+  static const error = Color(0xFFEF4444);
+  static const pending = Color(0xFF8B7355);
 
   // Neutrals
-  static const neutral900 = Color(0xFF212121);
-  static const neutral700 = Color(0xFF616161);
-  static const neutral100 = Color(0xFFF5F5F5);
+  static const textPrimary = Color(0xFFE5E7EB);
+  static const textSecondary = Color(0xFF9CA3AF);
+  static const textMuted = Color(0xFF6B7280);
+  static const neutral900 = Color(0xFF111827);
+  static const neutral700 = Color(0xFF374151);
+  static const neutral100 = Color(0xFFF3F4F6);
   static const neutral50 = Color(0xFFFAFAFA);
+  
+  // Glass effect
+  static const glassLight = Color(0xFF1E3A3A);
 }
 
 class AppTheme {
   static final _base = ColorScheme.fromSeed(
-    seedColor: AppColors.blue,
-    primary: AppColors.blue,
-    secondary: AppColors.teal,
+    seedColor: AppColors.primaryCyan,
+    primary: AppColors.primaryCyan,
+    secondary: AppColors.brightBlue,
+    brightness: Brightness.light,
   );
 
   static final _darkBase = ColorScheme.fromSeed(
-    seedColor: AppColors.blue,
+    seedColor: AppColors.primaryCyan,
     brightness: Brightness.dark,
-    primary: AppColors.neonCyan,
-    secondary: AppColors.teal,
+    primary: AppColors.primaryCyan,
+    secondary: AppColors.brightBlue,
+    surface: AppColors.darkTeal,
   );
 
   static final lightTheme = ThemeData(
     useMaterial3: true,
     colorScheme: _base,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: AppColors.neutral50,
     // Enhanced typography using Inter from Google Fonts for a modern, readable UI
     textTheme: GoogleFonts.interTextTheme(
       const TextTheme(
@@ -93,11 +105,11 @@ class AppTheme {
     // Elevated buttons
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.blue,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primaryCyan,
+        foregroundColor: Colors.black,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 2,
+        elevation: 0,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
@@ -105,7 +117,7 @@ class AppTheme {
     // Text buttons
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.blue,
+        foregroundColor: AppColors.primaryCyan,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -133,7 +145,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.blue, width: 2),
+        borderSide: const BorderSide(color: AppColors.primaryCyan, width: 2),
       ),
     ),
 
@@ -148,7 +160,7 @@ class AppTheme {
   static final darkTheme = ThemeData(
     useMaterial3: true,
     colorScheme: _darkBase,
-    scaffoldBackgroundColor: const Color(0xFF121212),
+    scaffoldBackgroundColor: AppColors.darkBg,
 
     // Enhanced typography (same scale as light) using Inter
     textTheme: GoogleFonts.interTextTheme(
@@ -199,53 +211,53 @@ class AppTheme {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.neonCyan,
+        backgroundColor: AppColors.primaryCyan,
         foregroundColor: Colors.black,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 4,
+        elevation: 0,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
 
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.neonCyan,
+        foregroundColor: AppColors.primaryCyan,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
 
     cardTheme: CardThemeData(
-      elevation: 2,
-      color: const Color(0xFF1E1E1E),
+      elevation: 0,
+      color: AppColors.darkTeal,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFF2A2A2A),
+      fillColor: AppColors.mediumTeal,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF404040)),
+        borderSide: const BorderSide(color: AppColors.mediumTeal),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF404040)),
+        borderSide: const BorderSide(color: AppColors.mediumTeal),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.neonCyan, width: 2),
+        borderSide: const BorderSide(color: AppColors.primaryCyan, width: 2),
       ),
     ),
 
     appBarTheme: const AppBarTheme(
       centerTitle: false,
       elevation: 0,
-      scrolledUnderElevation: 1,
-      backgroundColor: Color(0xFF1E1E1E),
+      scrolledUnderElevation: 0,
+      backgroundColor: AppColors.darkBg,
     ),
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers.dart';
+import '../services/ai_service.dart';
 
 class CreditApplicationFormScreen extends ConsumerStatefulWidget {
   const CreditApplicationFormScreen({super.key});
@@ -30,6 +31,8 @@ class _CreditApplicationFormScreenState
 
   int _currentStep = 0;
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _loan.dispose();
@@ -48,44 +51,107 @@ class _CreditApplicationFormScreenState
     super.dispose();
   }
 
-  void _onStepContinue() {
+  Future<void> _onStepContinue() async {
     if (_currentStep < 3) {
       setState(() => _currentStep += 1);
       return;
     }
 
-    // final submit
-    final form = {
-      'fullName': _fullName.text,
-      'dob': _dob.text,
-      'ssn': _ssn.text,
-      'email': _email.text,
-      'phone': _phone.text,
-      'loanAmount': double.tryParse(_loan.text) ?? 0.0,
-      'durationMonths': int.tryParse(_duration.text) ?? 12,
-      'income': double.tryParse(_income.text) ?? 0.0,
-      'assets': double.tryParse(_assets.text) ?? 0.0,
-      'liabilities': double.tryParse(_liabilities.text) ?? 0.0,
-      'debtRatio': double.tryParse(_debt.text) ?? 0.0,
-      'age': int.tryParse(_age.text) ?? 0,
-      'employment': _employment.text,
-    };
-    final result = computeScoreFromForm(form);
-    ref.read(latestScoreProvider.notifier).state = result;
+    // Final submit - call real ML API
+    setState(() => _isLoading = true);
 
-    // add to applications list (dummy)
-    ref
-        .read(applicationsProvider.notifier)
-        .add(
-          CreditApplication(
-            id: 'app-${DateTime.now().millisecondsSinceEpoch}',
-            amount: form['loanAmount'] as double,
-            date: DateTime.now(),
-            status: result.status,
+    try {
+      final income = double.tryParse(_income.text) ?? 3500.0;
+      final loanAmount = double.tryParse(_loan.text) ?? 5000.0;
+      final age = int.tryParse(_age.text) ?? 30;
+      final assets = double.tryParse(_assets.text) ?? 0.0;
+      final liabilities = double.tryParse(_liabilities.text) ?? 0.0;
+
+      // Convert to Home Credit format for ML API
+      final formData = {
+        'AMT_INCOME_TOTAL': income * 12, // Annual income
+        'AMT_CREDIT': loanAmount,
+        'AMT_ANNUITY': loanAmount / 12, // Monthly payment estimate
+        'AMT_GOODS_PRICE': loanAmount,
+        'DAYS_BIRTH': -(age * 365), // Convert age to negative days
+        'DAYS_EMPLOYED': -1825, // ~5 years employed
+        'CODE_GENDER': 'M',
+        'NAME_EDUCATION_TYPE': 'Higher education',
+        'NAME_INCOME_TYPE': _employment.text == 'Full-time' ? 'Working' : 'Commercial associate',
+        'NAME_FAMILY_STATUS': 'Married',
+        'CNT_CHILDREN': 0,
+        'FLAG_OWN_CAR': assets > 5000 ? 'Y' : 'N',
+        'FLAG_OWN_REALTY': assets > 20000 ? 'Y' : 'N',
+        'EXT_SOURCE_1': 0.5,
+        'EXT_SOURCE_2': 0.6,
+        'EXT_SOURCE_3': 0.5,
+      };
+
+      // Call the real AI service
+      final aiService = ref.read(aiServiceProvider);
+      final result = await aiService.predict(formData);
+
+      // Store the result
+      ref.read(latestScoreProvider.notifier).state = result;
+
+      // Add to applications list
+      ref.read(applicationsProvider.notifier).add(
+        CreditApplication(
+          id: 'app-${DateTime.now().millisecondsSinceEpoch}',
+          amount: loanAmount,
+          date: DateTime.now(),
+          status: result.status,
+        ),
+      );
+
+      if (mounted) {
+        context.goNamed('userScore');
+      }
+    } catch (e) {
+      // Fallback to local computation if API fails
+      debugPrint('ML API failed, using fallback: $e');
+      
+      final form = {
+        'fullName': _fullName.text,
+        'dob': _dob.text,
+        'ssn': _ssn.text,
+        'email': _email.text,
+        'phone': _phone.text,
+        'loanAmount': double.tryParse(_loan.text) ?? 0.0,
+        'durationMonths': int.tryParse(_duration.text) ?? 12,
+        'income': double.tryParse(_income.text) ?? 0.0,
+        'assets': double.tryParse(_assets.text) ?? 0.0,
+        'liabilities': double.tryParse(_liabilities.text) ?? 0.0,
+        'debtRatio': double.tryParse(_debt.text) ?? 0.0,
+        'age': int.tryParse(_age.text) ?? 0,
+        'employment': _employment.text,
+      };
+      final result = computeScoreFromForm(form);
+      ref.read(latestScoreProvider.notifier).state = result;
+
+      ref.read(applicationsProvider.notifier).add(
+        CreditApplication(
+          id: 'app-${DateTime.now().millisecondsSinceEpoch}',
+          amount: form['loanAmount'] as double,
+          date: DateTime.now(),
+          status: result.status,
+        ),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Using offline scoring (backend unavailable)'),
+            backgroundColor: Colors.orange,
           ),
         );
-
-    context.goNamed('userScore');
+        context.goNamed('userScore');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   void _onStepCancel() {
@@ -117,18 +183,27 @@ class _CreditApplicationFormScreenState
                       children: [
                         Flexible(
                           child: ElevatedButton(
-                            onPressed: details.onStepContinue,
+                            onPressed: _isLoading ? null : details.onStepContinue,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 12,
                                 horizontal: 18,
                               ),
-                              child: Text(isLast ? 'Submit' : 'Next'),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(isLast ? 'Get AI Score' : 'Next'),
                             ),
                           ),
                         ),
                         const SizedBox(width: 12),
-                        if (_currentStep > 0)
+                        if (_currentStep > 0 && !_isLoading)
                           Flexible(
                             child: TextButton(
                               onPressed: details.onStepCancel,
