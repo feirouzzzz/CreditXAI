@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,57 +16,90 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public Map<String, Object> register(String email, String username, String password) {
 
-        Map<String, Object> response = new HashMap<>();
-
         if (userRepository.findByEmail(email).isPresent()) {
-            response.put("success", false);
-            response.put("message", "Email already exists");
-            return response;
+            return Map.of(
+                    "success", false,
+                    "message", "Email already exists"
+            );
         }
 
-        User user = new User(null, email, username, encoder.encode(password));
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setPassword(encoder.encode(password));
+        user.setIdentityVerified(false);
+
         userRepository.save(user);
 
-        response.put("success", true);
-        response.put("message", "User registered successfully");
-        response.put("id", user.getId());
-        response.put("email", user.getEmail());
-        response.put("username", user.getUsername());
-        response.put("token", jwtUtil.generateToken(user));
-
-        return response;
+        return Map.of(
+                "success", true,
+                "message", "User registered successfully",
+                "id", user.getId(),
+                "identityVerified", false
+        );
     }
 
     public Map<String, Object> login(String email, String password) {
 
-        Map<String, Object> response = new HashMap<>();
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
 
-        if (optionalUser.isEmpty()) {
-            response.put("success", false);
-            response.put("message", "User not found");
-            return response;
+        if (user == null) {
+            return Map.of(
+                    "success", false,
+                    "message", "User not found"
+            );
         }
-
-        User user = optionalUser.get();
 
         if (!encoder.matches(password, user.getPassword())) {
-            response.put("success", false);
-            response.put("message", "Invalid credentials");
-            return response;
+            return Map.of(
+                    "success", false,
+                    "message", "Invalid password"
+            );
         }
 
+        Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("message", "Login successful");
         response.put("id", user.getId());
         response.put("email", user.getEmail());
         response.put("username", user.getUsername());
-        response.put("token", jwtUtil.generateToken(user));
+        response.put("identityVerified", user.isIdentityVerified());
+
+        if (user.isIdentityVerified()) {
+            response.put("message", "Login successful");
+            response.put("token", jwtUtil.generateToken(user));
+        } else {
+            response.put("message", "Identity verification required");
+        }
 
         return response;
+    }
+
+    public Map<String, Object> verifyCin(Long userId, String cin) {
+
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            return Map.of(
+                    "success", false,
+                    "message", "User not found"
+            );
+        }
+
+        user.setCin(cin);
+        user.setIdentityVerified(true);
+        userRepository.save(user);
+
+        return Map.of(
+                "success", true,
+                "message", "Identity verified successfully",
+                "id", user.getId(),
+                "identityVerified", true,
+                "token", jwtUtil.generateToken(user)
+        );
     }
 }

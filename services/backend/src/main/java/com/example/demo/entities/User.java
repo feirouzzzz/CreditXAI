@@ -23,4 +23,8 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    private boolean identityVerified = false;
+
+    private String cin;
 }
