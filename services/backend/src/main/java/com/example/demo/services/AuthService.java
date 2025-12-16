@@ -108,7 +108,7 @@ public class AuthService {
             // ☁️ Upload to MinIO
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .bucket("users") // bucket must exist
+                            .bucket("user-files") // bucket must exist
                             .object(objectName)
                             .stream(
                                     photo.getInputStream(),
