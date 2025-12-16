@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class AuthRequest {
 
-    @Schema(example = "soulaimane@example.com")
+    @Schema(example = "test@gmail.com")
     private String email;
 
-    @Schema(example = "Soulaimane")
+    @Schema(example = "Test")
     private String username;
 
-    @Schema(example = "password123")
+    @Schema(example = "1234")
     private String password;
 }

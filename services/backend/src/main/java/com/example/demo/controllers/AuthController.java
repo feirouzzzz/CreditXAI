@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -33,13 +34,11 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/verify-cin")
-    public ResponseEntity<Map<String, Object>> verifyCin(
+    @PostMapping(value = "/verify-cin", consumes = "multipart/form-data")
+    public Map<String, Object> verifyCin(
             @RequestParam Long userId,
-            @RequestParam String cin
+            @RequestParam MultipartFile photo
     ) {
-        return ResponseEntity.ok(
-                authService.verifyCin(userId, cin)
-        );
+        return authService.verifyCin(userId, photo);
     }
 }
