@@ -1,0 +1,6 @@
+projectKey=CreditXAI-ML
+serverUrl=http://localhost:9002
+serverVersion=25.11.0.114957
+dashboardUrl=http://localhost:9002/dashboard?id=CreditXAI-ML
+ceTaskId=1485cba3-a261-4e4e-860f-b54e5aca77fc
+ceTaskUrl=http://localhost:9002/api/ce/task?id=1485cba3-a261-4e4e-860f-b54e5aca77fc
