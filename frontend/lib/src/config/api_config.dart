@@ -1,10 +1,10 @@
-/// API Configuration for the ML Backend
+/// API Configuration for the Backend
 class ApiConfig {
-  /// Base URL for the ML API
+  /// Base URL for the API
   /// Change this to your actual backend URL
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:8080/api',
+    defaultValue: 'http://localhost:8080',
   );
 
   /// Timeout durations
@@ -12,7 +12,12 @@ class ApiConfig {
   static const Duration receiveTimeout = Duration(seconds: 30);
   static const Duration sendTimeout = Duration(seconds: 30);
 
-  /// API Endpoints
+  /// Auth Endpoints
+  static const String authRegister = '/auth/register';
+  static const String authLogin = '/auth/login';
+  static const String authVerifyCin = '/auth/verify-cin';
+
+  /// ML API Endpoints
   static const String predict = '/ml/predict';
   static const String explainShap = '/ml/explain';
   static const String fairnessMetrics = '/ml/fairness';
@@ -29,6 +34,13 @@ class ApiConfig {
   static Map<String, String> get defaultHeaders => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+      };
+
+  /// Headers with auth token
+  static Map<String, String> authHeaders(String token) => {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
       };
 
   /// Check if running in production

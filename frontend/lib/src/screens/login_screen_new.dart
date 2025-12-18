@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../widgets/custom_text_field.dart';
 import '../theme/app_theme.dart';
 import '../widgets/responsive_builder.dart';
+import '../providers/auth_provider.dart';
 import 'dart:ui';
 
 /// Modern login/signup screen with glassmorphism - Fully responsive
@@ -45,83 +46,95 @@ class _LoginScreenNewState extends ConsumerState<LoginScreenNew> with SingleTick
     _animController.forward();
   }
 
-  void _login() {
+  void _login() async {
     setState(() {
       _emailError = null;
       _passwordError = null;
     });
-
-    // Demo credentials - no API call needed
-    const demoEmail = 'test@example.com';
-    const demoPassword = 'password123';
 
     final email = _email.text.trim();
     final password = _password.text.trim();
 
-    // Validate demo credentials
-    if (email == demoEmail && password == demoPassword) {
-      // Login successful - navigate to home
-      if (mounted) {
+    if (email.isEmpty) {
+      setState(() => _emailError = 'Email is required');
+      return;
+    }
+    if (password.isEmpty) {
+      setState(() => _passwordError = 'Password is required');
+      return;
+    }
+
+    // Call the auth provider to login
+    final success = await ref.read(authProvider.notifier).login(email, password);
+
+    if (success && mounted) {
+      final authState = ref.read(authProvider);
+      
+      if (authState.needsVerification) {
+        // User needs to verify CIN
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Welcome back! Logging in...')),
+          const SnackBar(content: Text('Please verify your identity to continue')),
         );
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            context.go('/user/home');
-          }
-        });
+        context.go('/register'); // Go to registration to upload CIN
+      } else if (authState.isAuthenticated) {
+        // Fully authenticated
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Welcome back!')),
+        );
+        context.go('/user/home');
       }
-    } else {
-      // Show error
-      setState(() {
-        _emailError = 'Invalid email';
-        _passwordError = 'Invalid password';
-      });
+    } else if (mounted) {
+      final error = ref.read(authProvider).error;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Demo: Use test@example.com / password123'),
-          duration: Duration(seconds: 3),
-        ),
+        SnackBar(content: Text(error ?? 'Login failed')),
       );
     }
   }
 
-  void _signup() {
+  void _signup() async {
     setState(() {
       _emailError = null;
       _passwordError = null;
     });
 
-    // Demo signup - just show success message
-    if (_name.text.isEmpty) {
+    final name = _name.text.trim();
+    final email = _email.text.trim();
+    final password = _password.text.trim();
+    final confirm = _confirm.text.trim();
+
+    if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Name is required')),
       );
       return;
     }
-    if (_email.text.isEmpty) {
+    if (email.isEmpty) {
       setState(() => _emailError = 'Email is required');
       return;
     }
-    if (_password.text.isEmpty) {
+    if (password.isEmpty) {
       setState(() => _passwordError = 'Password is required');
       return;
     }
-    if (_confirm.text != _password.text) {
+    if (confirm != password) {
       setState(() => _passwordError = 'Passwords do not match');
       return;
     }
 
-    // Signup successful - navigate to registration with ID card
-    if (mounted) {
+    // Call the auth provider to register
+    final success = await ref.read(authProvider.notifier).register(email, name, password);
+
+    if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created! Complete your profile.')),
+        const SnackBar(content: Text('Account created! Please verify your identity.')),
       );
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          context.go('/register');
-        }
-      });
+      // Navigate to CIN verification screen
+      context.go('/register');
+    } else if (mounted) {
+      final error = ref.read(authProvider).error;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error ?? 'Registration failed')),
+      );
     }
   }
 
@@ -368,39 +381,9 @@ class _LoginScreenNewState extends ConsumerState<LoginScreenNew> with SingleTick
                   child: Text(_isLogin ? 'Login' : 'Sign Up', style: const TextStyle(fontSize: 16)),
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.white.withOpacity(0.2))),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('OR', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                  ),
-                  Expanded(child: Divider(color: Colors.white.withOpacity(0.2))),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _buildOAuthButton('Continue with Google', Icons.g_translate),
-              const SizedBox(height: 12),
-              _buildOAuthButton('Continue with Apple', Icons.apple),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildOAuthButton(String label, IconData icon) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        side: BorderSide(color: Colors.white.withOpacity(0.2)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      onPressed: () {},
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
       ),
     );
   }

@@ -63,7 +63,7 @@ class AIScoreResultsScreen extends ConsumerWidget {
         height: 240,
         child: CustomPaint(
           painter: ScoreGaugePainter(
-            score: score,
+            score: score.toDouble(),
             maxScore: 900,
             strokeWidth: 18,
             activeColor: AppColors.primaryCyan,

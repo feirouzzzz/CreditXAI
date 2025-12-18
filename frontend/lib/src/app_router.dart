@@ -34,6 +34,8 @@ import 'screens/privacy_policy_screen.dart';
 import 'screens/terms_screen.dart';
 import 'screens/registration_screen.dart';
 import 'screens/application_history_screen.dart';
+import 'screens/document_upload_screen.dart';
+import 'screens/supplementary_info_screen.dart';
 
 /// Centralized router builder using GoRouter and Riverpod for navigation.
 
@@ -131,6 +133,16 @@ final routerProvider = Provider<GoRouter>(
         name: 'userHome',
         path: '/user/home',
         builder: (c, s) => const UserHomeDashboardScreen(),
+      ),
+      GoRoute(
+        name: 'userSupplementaryInfo',
+        path: '/user/supplementary-info',
+        builder: (c, s) => const SupplementaryInfoScreen(),
+      ),
+      GoRoute(
+        name: 'userDocuments',
+        path: '/user/documents',
+        builder: (c, s) => const DocumentUploadScreen(),
       ),
       GoRoute(
         name: 'userHistory',

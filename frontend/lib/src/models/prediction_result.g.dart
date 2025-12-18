@@ -9,8 +9,7 @@ part of 'prediction_result.dart';
 PredictionResult _$PredictionResultFromJson(Map<String, dynamic> json) =>
     PredictionResult(
       applicationId: json['application_id'] as String?,
-      predictionProbability:
-          (json['prediction_probability'] as num).toDouble(),
+      predictionProbability: (json['prediction_probability'] as num).toDouble(),
       creditScore: (json['credit_score'] as num).toInt(),
       decision: json['decision'] as String,
       confidence: (json['confidence'] as num).toDouble(),
@@ -20,7 +19,8 @@ PredictionResult _$PredictionResultFromJson(Map<String, dynamic> json) =>
       fairnessMetrics: json['fairness_metrics'] == null
           ? null
           : FairnessMetrics.fromJson(
-              json['fairness_metrics'] as Map<String, dynamic>),
+              json['fairness_metrics'] as Map<String, dynamic>,
+            ),
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
@@ -45,8 +45,8 @@ FairnessMetrics _$FairnessMetricsFromJson(Map<String, dynamic> json) =>
       demographicParity: (json['demographic_parity'] as num?)?.toDouble(),
       equalOpportunity: (json['equal_opportunity'] as num?)?.toDouble(),
       disparateImpact: (json['disparate_impact'] as num?)?.toDouble(),
-      averageOddsDifference:
-          (json['average_odds_difference'] as num?)?.toDouble(),
+      averageOddsDifference: (json['average_odds_difference'] as num?)
+          ?.toDouble(),
       fairnessScore: (json['fairness_score'] as num?)?.toDouble(),
       protectedAttribute: json['protected_attribute'] as String?,
     );

@@ -263,7 +263,7 @@ class UserHomeDashboardScreen extends ConsumerWidget {
             deviceType,
             icon: Icons.add_circle_outline,
             label: 'New Application',
-            onTap: () => context.go('/financials'),
+            onTap: () => context.go('/user/documents'),
           ),
           const SizedBox(height: 12),
           _buildActionButton(
@@ -294,7 +294,7 @@ class UserHomeDashboardScreen extends ConsumerWidget {
             deviceType,
             icon: Icons.add_circle_outline,
             label: 'New Application',
-            onTap: () => context.go('/financials'),
+            onTap: () => context.go('/user/documents'),
           ),
         ),
         const SizedBox(width: 12),
@@ -322,36 +322,68 @@ class UserHomeDashboardScreen extends ConsumerWidget {
   }
 
   Widget _buildActionButton(BuildContext context, DeviceType deviceType, {required IconData icon, required String label, required VoidCallback onTap}) {
+    final isNewApp = label == 'New Application';
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
         decoration: BoxDecoration(
-          color: AppColors.darkTeal,
-          borderRadius: BorderRadius.circular(16),
+          gradient: isNewApp
+              ? LinearGradient(
+                  colors: [
+                    AppColors.primaryCyan.withOpacity(0.3),
+                    AppColors.primaryCyan.withOpacity(0.1),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isNewApp ? null : AppColors.darkTeal,
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withOpacity(0.08),
-            width: 1,
+            color: isNewApp ? AppColors.primaryCyan.withOpacity(0.5) : Colors.white.withOpacity(0.08),
+            width: isNewApp ? 1.5 : 1,
           ),
+          boxShadow: isNewApp
+              ? [
+                  BoxShadow(
+                    color: AppColors.primaryCyan.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.primaryCyan.withOpacity(0.15),
+                color: isNewApp
+                    ? AppColors.primaryCyan.withOpacity(0.25)
+                    : AppColors.primaryCyan.withOpacity(0.15),
                 shape: BoxShape.circle,
+                border: isNewApp
+                    ? Border.all(color: AppColors.primaryCyan.withOpacity(0.4), width: 2)
+                    : null,
               ),
-              child: Icon(icon, color: AppColors.primaryCyan, size: 24),
+              child: Icon(
+                icon,
+                color: AppColors.primaryCyan,
+                size: isNewApp ? 28 : 24,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isNewApp ? AppColors.primaryCyan : Colors.white,
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
+                fontWeight: isNewApp ? FontWeight.w700 : FontWeight.w600,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

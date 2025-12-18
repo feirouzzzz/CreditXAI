@@ -76,8 +76,8 @@ class AppDrawer extends StatelessWidget {
                   context,
                   icon: Icons.add_circle_outline,
                   title: 'New Application',
-                  route: '/financials',
-                  isActive: currentRoute == '/financials',
+                  route: '/user/documents',
+                  isActive: currentRoute == '/user/documents',
                 ),
                 _buildDrawerItem(
                   context,
