@@ -94,6 +94,12 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 ## 1. How you run tests locally
 ### Backend
 #### Unit Tests
+Every tests
+```
+mvn verify
+```
+
+#### Unit Tests
 ```
 mvn test -DskipITs
 ```
@@ -101,8 +107,8 @@ mvn test -DskipITs
 #### Integration Tests
 Testing environment must be runing
 ```
-docker compose -f docker-compose.it.yml up -d
-mvn verify -Pintegration
+docker compose -f docker-compose.test.yml up -d
+mvn -Dtest=*IT test
 docker compose -f docker-compose.test.yml down -v
 ```
 ---

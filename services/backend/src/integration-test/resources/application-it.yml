@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/app_test
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5433/creditxai_test
+    username: test
+    password: test123
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
 
 minio:
-  url: http://localhost:9000
-  access-key: minioadmin
-  secret-key: minioadmin
+  url: http://localhost:9010
+  access-key: admin
+  secret-key: admin123
