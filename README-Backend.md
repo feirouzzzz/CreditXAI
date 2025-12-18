@@ -6,8 +6,7 @@
 
 - user login (email, password)
 
-
-### Logged in
+    ### Logged in
 #### Complete Docs
 - Income & Employment Verification
     - Recent pay slips (last 3 months) (PDF)
@@ -23,5 +22,3 @@
     For freelancers, entrepreneurs, or business owners.
     - Business registration certificate (PDF)
     - Income declaration (PDF)
-
-    
