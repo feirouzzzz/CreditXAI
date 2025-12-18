@@ -111,7 +111,7 @@
 
     <build>
 		<plugins>
-            <!-- UNIT TESTS -->
+            <!-- Unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -123,13 +123,14 @@
                 </configuration>
             </plugin>
 
-            <!-- INTEGRATION TESTS -->
+            <!-- Integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.2.5</version>
                 <executions>
                     <execution>
+                    <id>integration-tests</id>
                     <goals>
                         <goal>integration-test</goal>
                         <goal>verify</goal>
@@ -142,7 +143,6 @@
                     </execution>
                 </executions>
             </plugin>
-
 
 			<!-- Compiler plugin -->
 			<plugin>
@@ -167,6 +167,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 </project>
