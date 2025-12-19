@@ -89,6 +89,36 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 ---
 ---
 
+# Run Apps
+## 1. Backend
+Containers
+```
+cd CreditXAI\infrastructure
+docker-compose up -d
+```
+- create user-files bucket in minio if it's not
+
+```
+cd CreditXAI\services\backend
+mvn spring-boot:run   
+```
+
+## 2. ML
+```
+cd CreditXAI\services\ml
+.\venv\Scripts\Activate.ps1
+py .\main.py
+```
+
+## 3. Flutter
+```
+flutter run
+```
+
+
+
+---
+---
 # Quality Assurance
 
 ## 1. How you run tests locally
