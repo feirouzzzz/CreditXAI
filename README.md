@@ -122,7 +122,7 @@ flutter run
 # Quality Assurance
 
 ## 1. How you run tests locally
-### Backend
+### 1.1 Backend
 #### Unit Tests
 Every tests
 ```
@@ -143,7 +143,7 @@ docker compose -f docker-compose.test.yml down -v
 ```
 ---
 
-### ML
+### 1.2 ML
 #### Unit Tests
 #### Integration Tests
 
@@ -152,9 +152,9 @@ docker compose -f docker-compose.test.yml down -v
 ---
 
 ## 2. How to test system with sonar
-### Backend
+### 2.1 Backend
 ```
 mvn clean verify sonar:sonar "-Dsonar.host.url=http://localhost:9002" "-Dsonar.login=sqa_55b80152b2817bab7812e9f97b02f98c12fb168a"
 ```
 
-### ML
+### 2.2 ML
