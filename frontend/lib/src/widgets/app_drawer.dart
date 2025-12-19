@@ -8,7 +8,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRoute = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+    final currentRoute = GoRouter.of(context).location;
     
     return Drawer(
       backgroundColor: AppColors.darkBg,
