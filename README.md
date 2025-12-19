@@ -145,7 +145,11 @@ docker compose -f docker-compose.test.yml down -v
 
 ### 1.2 ML
 #### Unit Tests
+```
+```
 #### Integration Tests
+```
+```
 
 
 ---
@@ -158,3 +162,5 @@ mvn clean verify sonar:sonar "-Dsonar.host.url=http://localhost:9002" "-Dsonar.l
 ```
 
 ### 2.2 ML
+```
+```
