@@ -123,7 +123,6 @@ flutter run
 
 ## 1. How you run tests locally
 ### 1.1 Backend
-#### Unit Tests
 Every tests
 ```
 mvn verify
@@ -137,9 +136,10 @@ mvn test -DskipITs
 #### Integration Tests
 Testing environment must be runing
 ```
-docker compose -f docker-compose.test.yml up -d
-mvn -Dtest=*IT test
-docker compose -f docker-compose.test.yml down -v
+cd CreditXAI\infrastructure    
+docker compose -f docker-compose.test.yml up -d      # Run testing containers
+mvn -Dtest=*IT test                                  # run integration tests
+docker compose -f docker-compose.test.yml down -v    # destroy testing containers
 ```
 ---
 
