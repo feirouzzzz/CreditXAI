@@ -22,10 +22,6 @@ import 'screens/results_detailed_screen.dart';
 import 'screens/consent_screen.dart';
 import 'screens/user_home_dashboard_screen.dart';
 import 'screens/ai_score_results_screen.dart';
-import 'screens/admin_login_screen.dart';
-import 'screens/admin_dashboard_screen.dart';
-import 'screens/admin_applications_screen.dart';
-import 'screens/admin_application_detail.dart';
 import 'screens/settings_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/help_support_screen.dart';
@@ -188,31 +184,6 @@ final routerProvider = Provider<GoRouter>(
         name: 'summary',
         path: '/summary',
         builder: (c, s) => const ApplicationSummaryScreenNew(),
-      ),
-
-      // Admin tree
-      GoRoute(
-        name: 'adminLogin',
-        path: '/admin/login',
-        builder: (c, s) => const AdminLoginScreen(),
-      ),
-      GoRoute(
-        name: 'adminDashboard',
-        path: '/admin/dashboard',
-        builder: (c, s) => const AdminDashboardWideScreen(),
-      ),
-      GoRoute(
-        name: 'adminApplications',
-        path: '/admin/applications',
-        builder: (c, s) => const AdminApplicationsScreen(),
-      ),
-      GoRoute(
-        name: 'adminApplicationDetail',
-        path: '/admin/applications/:id',
-        builder: (c, s) {
-          final id = s.params['id']!;
-          return AdminApplicationDetailScreen(applicationId: id);
-        },
       ),
 
       // Settings & Support

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers.dart';
-import '../services/ai_service.dart';
 
 class CreditApplicationFormScreen extends ConsumerStatefulWidget {
   const CreditApplicationFormScreen({super.key});
@@ -65,7 +64,7 @@ class _CreditApplicationFormScreenState
       final loanAmount = double.tryParse(_loan.text) ?? 5000.0;
       final age = int.tryParse(_age.text) ?? 30;
       final assets = double.tryParse(_assets.text) ?? 0.0;
-      final liabilities = double.tryParse(_liabilities.text) ?? 0.0;
+      // final liabilities = double.tryParse(_liabilities.text) ?? 0.0;
 
       // Convert to Home Credit format for ML API
       final formData = {

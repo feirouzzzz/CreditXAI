@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import '../theme/app_theme.dart';
 import '../widgets/responsive_builder.dart';
 import '../widgets/app_drawer.dart';
@@ -98,7 +98,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         type: DocumentType.incomeConsistency,
         title: 'Income Consistency',
         description: 'Bank statements showing 3 months income',
-        fileType: 'CSV',
+        fileType: 'XLSX',
       ),
     ];
 
@@ -108,7 +108,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         type: DocumentType.loanPayments,
         title: 'Loan Payments',
         description: 'History of loan payments',
-        fileType: 'CSV',
+        fileType: 'XLSX',
       ),
     ];
 
@@ -132,19 +132,60 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   }
 
   Future<void> _pickFile(DocumentStatus doc, List<DocumentStatus> list) async {
-    final picker = ImagePicker();
-    
-    // For simplicity using image picker for PDFs too (in real app, use file_picker)
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+    try {
+      // Determine allowed extensions based on file type
+      final allowedExtensions = doc.fileType == 'PDF' ? ['pdf'] : ['xlsx'];
+      
+      // Pick file with type validation
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: allowedExtensions,
+        allowMultiple: false,
+      );
 
-    if (pickedFile != null) {
-      final index = list.indexOf(doc);
-      setState(() {
-        list[index] = doc.copyWith(file: File(pickedFile.path));
-      });
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+        final fileExtension = fileName.split('.').last.toLowerCase();
+        
+        // Validate file extension
+        if (!allowedExtensions.contains(fileExtension)) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Please upload a ${doc.fileType} file only'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          return;
+        }
+        
+        // Update the document with the selected file
+        final index = list.indexOf(doc);
+        setState(() {
+          list[index] = doc.copyWith(file: File(filePath));
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('✓ ${doc.title} uploaded successfully'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error uploading file: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

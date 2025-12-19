@@ -537,6 +537,8 @@ class UserHomeDashboardScreen extends ConsumerWidget {
     );
   }
   
+  // Commented out unused method
+  /*
   Widget _buildRecentApplications(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,7 +587,9 @@ class UserHomeDashboardScreen extends ConsumerWidget {
       ],
     );
   }
+  */
   
+  /*
   Widget _buildApplicationItem({
     required String date,
     required int score,
@@ -662,6 +666,7 @@ class UserHomeDashboardScreen extends ConsumerWidget {
         ],
       ),    );
   }
+  */
 }
 
 class ScoreGaugePainter extends CustomPainter {

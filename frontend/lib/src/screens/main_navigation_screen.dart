@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/app_theme.dart';
 import 'user_home_dashboard_screen.dart';
 import 'profile_screen_new.dart';
-import 'admin_applications_screen.dart';
 
 /// Main navigation wrapper with bottom navigation bar
 class MainNavigationScreen extends ConsumerStatefulWidget {
@@ -18,7 +17,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
 
   final List<Widget> _screens = [
     const UserHomeDashboardScreen(),
-    const AdminApplicationsScreen(),
     const ProfileScreenNew(),
   ];
 
@@ -51,15 +49,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.description_rounded,
-                  label: 'Applications',
-                  index: 1,
-                ),
-                _buildNavItem(
-                  context,
                   icon: Icons.person_rounded,
                   label: 'Profile',
-                  index: 2,
+                  index: 1,
                 ),
               ],
             ),

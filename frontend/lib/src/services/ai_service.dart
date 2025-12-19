@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import '../providers.dart';
 import '../models/credit_application_data.dart';
 import '../models/prediction_result.dart';
@@ -32,7 +33,7 @@ class AIService {
       return _convertPredictionToScoreResult(prediction);
     } catch (e) {
       // Fallback to mock data if API fails
-      print('API prediction failed, using mock data: $e');
+      debugPrint('API prediction failed, using mock data: $e');
       return _getMockPrediction(features);
     }
   }
@@ -56,7 +57,7 @@ class AIService {
           .toList();
     } catch (e) {
       // Fallback to mock data if API fails
-      print('API SHAP explanation failed, using mock data: $e');
+      debugPrint('API SHAP explanation failed, using mock data: $e');
       return _getMockShapValues();
     }
   }
@@ -74,7 +75,7 @@ class AIService {
         protectedAttribute: protectedAttribute,
       );
     } catch (e) {
-      print('Failed to get fairness metrics: $e');
+      debugPrint('Failed to get fairness metrics: $e');
       return null;
     }
   }
@@ -89,7 +90,7 @@ class AIService {
       final health = await _mlApiService.checkModelHealth();
       return health.healthy;
     } catch (e) {
-      print('Model health check failed: $e');
+      debugPrint('Model health check failed: $e');
       return false;
     }
   }

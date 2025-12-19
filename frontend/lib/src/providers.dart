@@ -152,7 +152,7 @@ final featureImportanceProvider = FutureProvider<Map<String, double>>((ref) asyn
   try {
     return await mlApiService.getFeatureImportance();
   } catch (e) {
-    print('Failed to get feature importance: $e');
+    debugPrint('Failed to get feature importance: $e');
     return {};
   }
 });
