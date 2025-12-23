@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import '../theme/app_theme.dart';
 import '../widgets/responsive_builder.dart';
 import '../widgets/app_drawer.dart';
+import '../services/file_picker_service.dart';
 
 /// Document types required for credit application
 enum DocumentType {
@@ -24,6 +27,8 @@ class DocumentStatus {
   final String description;
   final String fileType;
   final File? file;
+  final Uint8List? fileBytes; // For web
+  final String? fileName;
   final bool isOptional;
   final bool isForSelfEmployed;
 
@@ -33,17 +38,25 @@ class DocumentStatus {
     required this.description,
     required this.fileType,
     this.file,
+    this.fileBytes,
+    this.fileName,
     this.isOptional = false,
     this.isForSelfEmployed = false,
   });
 
-  DocumentStatus copyWith({File? file}) {
+  DocumentStatus copyWith({
+    File? file,
+    Uint8List? fileBytes,
+    String? fileName,
+  }) {
     return DocumentStatus(
       type: type,
       title: title,
       description: description,
       fileType: fileType,
       file: file ?? this.file,
+      fileBytes: fileBytes ?? this.fileBytes,
+      fileName: fileName ?? this.fileName,
       isOptional: isOptional,
       isForSelfEmployed: isForSelfEmployed,
     );
@@ -134,18 +147,20 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   Future<void> _pickFile(DocumentStatus doc, List<DocumentStatus> list) async {
     try {
       // Determine allowed extensions based on file type
-      final allowedExtensions = doc.fileType == 'PDF' ? ['pdf'] : ['xlsx'];
+      final allowedExtensions = doc.fileType == 'PDF' ? ['pdf'] : ['xlsx', 'xls'];
       
-      // Pick file with type validation
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
+      // Pick file with type validation using our service
+      final result = await FilePickerService.pickFile(
         allowedExtensions: allowedExtensions,
-        allowMultiple: false,
+        type: allowedExtensions.isNotEmpty 
+            ? (allowedExtensions.contains('pdf') 
+                ? FileType.custom 
+                : FileType.custom)
+            : FileType.any,
       );
 
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final fileName = result.files.single.name;
+      if (result != null && result.isValid) {
+        final fileName = result.name ?? 'unknown';
         final fileExtension = fileName.split('.').last.toLowerCase();
         
         // Validate file extension
@@ -164,7 +179,17 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         // Update the document with the selected file
         final index = list.indexOf(doc);
         setState(() {
-          list[index] = doc.copyWith(file: File(filePath));
+          if (kIsWeb) {
+            list[index] = doc.copyWith(
+              fileBytes: result.bytes,
+              fileName: fileName,
+            );
+          } else {
+            list[index] = doc.copyWith(
+              file: result.path != null ? File(result.path!) : null,
+              fileName: fileName,
+            );
+          }
         });
         
         if (mounted) {
@@ -192,14 +217,14 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   bool _isStepComplete(int step) {
     switch (step) {
       case 0:
-        return _incomeDocuments.every((d) => d.file != null);
+        return _incomeDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
       case 1:
-        return _financialDocuments.every((d) => d.file != null);
+        return _financialDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
       case 2:
-        return _loanDocuments.every((d) => d.file != null);
+        return _loanDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
       case 3:
         if (!_isSelfEmployed) return true;
-        return _businessDocuments.every((d) => d.file != null);
+        return _businessDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
       default:
         return false;
     }
@@ -207,12 +232,12 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
 
   bool _canSubmit() {
     // Check all required documents
-    final incomeComplete = _incomeDocuments.every((d) => d.file != null);
-    final financialComplete = _financialDocuments.every((d) => d.file != null);
-    final loanComplete = _loanDocuments.every((d) => d.file != null);
+    final incomeComplete = _incomeDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
+    final financialComplete = _financialDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
+    final loanComplete = _loanDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
     
     if (_isSelfEmployed) {
-      final businessComplete = _businessDocuments.every((d) => d.file != null);
+      final businessComplete = _businessDocuments.every((d) => kIsWeb ? d.fileBytes != null : d.file != null);
       return incomeComplete && financialComplete && loanComplete && businessComplete;
     }
     
@@ -449,7 +474,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
           subtitle: Text(
             isComplete
                 ? 'All documents uploaded'
-                : '${documents.where((d) => d.file != null).length}/${documents.length} documents',
+                : '${documents.where((d) => kIsWeb ? d.fileBytes != null : d.file != null).length}/${documents.length} documents',
             style: TextStyle(
               color: isComplete ? AppColors.primaryCyan : AppColors.textSecondary,
               fontSize: 12,
@@ -473,7 +498,7 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   }
 
   Widget _buildDocumentItem(DocumentStatus doc, List<DocumentStatus> list) {
-    final isUploaded = doc.file != null;
+    final isUploaded = (kIsWeb ? doc.fileBytes != null : doc.file != null);
 
     return Container(
       margin: const EdgeInsets.only(top: 12),
