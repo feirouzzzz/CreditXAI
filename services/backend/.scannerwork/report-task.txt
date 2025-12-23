@@ -1,0 +1,6 @@
+projectKey=CreditXAI-Backend-1
+serverUrl=http://localhost:9002
+serverVersion=25.11.0.114957
+dashboardUrl=http://localhost:9002/dashboard?id=CreditXAI-Backend-1
+ceTaskId=3e9571f3-9e3e-4fcd-afb0-1def83156069
+ceTaskUrl=http://localhost:9002/api/ce/task?id=3e9571f3-9e3e-4fcd-afb0-1def83156069

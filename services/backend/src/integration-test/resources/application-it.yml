@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/creditxai_test
+    username: test
+    password: test123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+minio:
+  url: http://localhost:9010
+  access-key: admin
+  secret-key: admin123

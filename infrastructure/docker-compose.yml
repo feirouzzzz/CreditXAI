@@ -1,12 +1,10 @@
-version: "3.9"
-
 services:
   # ======================================================
   #  PostgreSQL (Backend)
   # ======================================================
   postgres:
-    image: postgres:15
-    container_name: creditxai_db
+    image: postgres:16
+    container_name: backend_db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -24,6 +22,7 @@ services:
   # ======================================================
   minio:
     image: quay.io/minio/minio
+    container_name: backend_storage
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
@@ -35,6 +34,27 @@ services:
       - miniodata:/data
     networks:
       - creditxai_net
+
+  # ======================================================
+  #  CreditXI Backend
+  # ======================================================
+  backend:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    container_name: creditxai_backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../services/backend/.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - creditxai_net
+
 
   # ======================================================
   #  SonarQube
@@ -49,12 +69,12 @@ services:
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: sonar123
     ports:
-      - "9000:9000"
+      - "9002:9000"
     volumes:
       - sonar_data:/opt/sonarqube/data
       - sonar_extensions:/opt/sonarqube/extensions
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000" ]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -75,7 +95,7 @@ services:
     volumes:
       - sonar_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sonar"]
+      test: [ "CMD-SHELL", "pg_isready -U sonar" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -94,6 +114,7 @@ services:
       - "9090:9090"
     depends_on:
       - postgres
+      - backend
     networks:
       - creditxai_net
 
@@ -120,15 +141,19 @@ services:
 # ======================================================
 volumes:
   postgres_data:
+  postgres_test_data:
+  miniodata:
+  minio_test_data:
   sonar_data:
   sonar_extensions:
   sonar_db_data:
   grafana_data:
-  miniodata:
 
-# ======================================================
-#  NETWORKS
-# ======================================================
+    # ======================================================
+    #  NETWORKS
+    # ======================================================
 networks:
   creditxai_net:
+    driver: bridge
+  creditxai_test_net:
     driver: bridge

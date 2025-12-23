@@ -1,12 +1,12 @@
 ﻿
 
-# 📄 Cahier des Charges — Projet Flutter : Application de Scoring de Crédit Éthique (XAI)
+# Application de Scoring de Crédit Éthique (XAI)
 
 
 
-* Driss — ML Engineer
-* Soulaiman — Backend Developer
 * Zakaria — Flutter Developer
+* Soulaiman — Backend Developer
+* Driss — ML Engineer
 * Feirouz — DevOps & CI/CD
 
 ---
@@ -82,46 +82,85 @@ Avec la digitalisation des services financiers, il devient crucial d’évaluer 
 
 ---
 
-## 5. **Contraintes Fonctionnelles et Non-Fonctionnelles**
 
-**Fonctionnelles :**
 
-* L’API doit être sécurisée (authentification JWT obligatoire).
-* L’application doit être compatible Android/iOS.
-* Les prédictions doivent être explicables et traçables.
-
-**Non-Fonctionnelles :**
-
-* Temps de réponse backend ≤ 1s pour scoring.
-* Disponibilité ≥ 99% pour le service API.
-* CI/CD entièrement automatisé.
-* Centralisation des logs et KPI pour monitoring.
-
----
-
-| Component / Class            | Technologies / Tools                                                      |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| Flutter Mobile App (Flutter) | Flutter, Dart, Provider, Dio, fl_chart                                    |
-| Backend API                  | FastAPI, Pydantic, Swagger, Docker, Keycloak                              |
-| Machine Learning (ML)        | Python, XGBoost, LightGBM, scikit-learn, MLflow, SHAP, LIME, DiCE         |
-| Data Mining (Data Mining)    | Python, pandas, numpy, matplotlib, seaborn, Airflow, Feast                |
-| Database / Feature Store     | PostgreSQL, MySQL, Redis, S3, Alembic                                     |
-| Quality Management (QM)      | pytest, SonarQube, GitHub Actions, Fairlearn, AIF360, Grafana, Prometheus |
-| Explainable AI               | SHAP, LIME, DiCE, Python NLP                                              |
-| Monitoring / Audit           | ELK Stack, Prometheus, Grafana, OpenTelemetry                             |
 
 
 ---
+---
 
-## Explanation 
-
-### Backend API: Workflow / Sequence
+# Run Apps
+## 1. Backend
+Containers
 ```
-Flutter app sends POST /score request with applicant features.
-Backend API validates input using Pydantic schemas.
-Feature Fetcher pulls additional features from database / feature store.
-Scoring Service calls ML model for prediction.
-Explanation Service calls SHAP/LIME/DiCE for explanation.
-Audit Service stores request, prediction, and explanation in DB.
-API returns JSON response to Flutter app.
+cd CreditXAI\infrastructure
+docker-compose up -d
+```
+- create user-files bucket in minio if it's not
+
+```
+cd CreditXAI\services\backend
+mvn spring-boot:run   
+```
+
+## 2. ML
+```
+cd CreditXAI\services\ml
+.\venv\Scripts\Activate.ps1
+py .\main.py
+```
+
+## 3. Flutter
+```
+flutter run
+```
+
+
+
+---
+---
+# Quality Assurance
+
+## 1. How you run tests locally
+### 1.1 Backend
+Every tests
+```
+mvn verify
+```
+
+#### Unit Tests
+```
+mvn test -DskipITs
+```
+
+#### Integration Tests
+Testing environment must be runing
+```
+cd CreditXAI\infrastructure    
+docker compose -f docker-compose.test.yml up -d      # Run testing containers
+mvn -Dtest=*IT test                                  # run integration tests
+docker compose -f docker-compose.test.yml down -v    # destroy testing containers
+```
+---
+
+### 1.2 ML
+#### Unit Tests
+```
+```
+#### Integration Tests
+```
+```
+
+
+---
+---
+
+## 2. How to test system with sonar
+### 2.1 Backend
+```
+mvn clean verify sonar:sonar "-Dsonar.host.url=http://localhost:9002" "-Dsonar.login=sqa_55b80152b2817bab7812e9f97b02f98c12fb168a"
+```
+
+### 2.2 ML
+```
 ```
