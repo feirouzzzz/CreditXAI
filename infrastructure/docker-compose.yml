@@ -44,7 +44,7 @@ services:
       dockerfile: Dockerfile
     container_name: creditxai_backend
     ports:
-      - "8000:8000"
+      - "8000:8080"
     env_file:
       - ../services/backend/.env
     environment:

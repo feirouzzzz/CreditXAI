@@ -178,6 +178,34 @@
                 </executions>
             </plugin>
 
+            <!-- JMETER PERFORMANCE TESTS -->
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>3.7.0</version>
+                <executions>
+                    <execution>
+                        <id>configure</id>
+                        <goals><goal>configure</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <phase>verify</phase>
+                        <goals><goal>jmeter</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jmeterVersion>5.6.3</jmeterVersion>
+                    <testFilesDirectory>src/jmeter</testFilesDirectory>
+                    <resultsDirectory>target/jmeter/results</resultsDirectory>
+                    <generateReports>true</generateReports>
+                    <ignoreResultFailures>false</ignoreResultFailures>
+                    <!-- Force Java 17 for JMeter -->
+                    <javaExecutable>C:/Program Files/java/jdk-17.0.12/bin/java.exe</javaExecutable>
+                </configuration>
+            </plugin>
+
+
 			<!-- Compiler plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -201,4 +229,21 @@
 			</plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <profile>
+            <id>performance</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.lazerycode.jmeter</groupId>
+                        <artifactId>jmeter-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
