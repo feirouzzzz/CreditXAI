@@ -167,9 +167,15 @@ pytest tests/test_prediction_logic.py
 ## 2. How to test system with sonar
 ### 2.1 Backend
 ```
-mvn clean verify sonar:sonar "-Dsonar.host.url=http://localhost:9002" "-Dsonar.login=sqa_55b80152b2817bab7812e9f97b02f98c12fb168a"
+mvn clean verify sonar:sonar "-Dsonar.host.url=http://localhost:9002" "-Dsonar.login=sqa_cc19411140e1560d9d910c3e77394f3faa9b2a78"
 ```
 
 ### 2.2 ML
 ```
 ```
+
+
+admin
+Sonar@123456
+
+sqa_cc19411140e1560d9d910c3e77394f3faa9b2a78
