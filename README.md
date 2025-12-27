@@ -152,6 +152,9 @@ mvn jmeter:jmeter
 ### 1.2 ML
 #### Unit Tests
 ```
+.\venv\Scripts\Activate.ps1
+$env:PYTHONPATH = "."
+pytest tests/test_prediction_logic.py
 ```
 #### Integration Tests
 ```
