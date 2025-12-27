@@ -1,0 +1,20 @@
+2025-12-27 03:05:41,762 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2025-12-27 03:05:41,819 INFO o.a.j.JMeter: Loading user properties from: C:\Program Files\java\apache-jmeter-5.6.3\bin\user.properties
+2025-12-27 03:05:41,821 INFO o.a.j.JMeter: Loading system properties from: C:\Program Files\java\apache-jmeter-5.6.3\bin\system.properties
+2025-12-27 03:05:41,845 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2025-12-27 03:05:41,846 INFO o.a.j.JMeter: Version 5.6.3
+2025-12-27 03:05:41,846 INFO o.a.j.JMeter: java.version=21.0.8
+2025-12-27 03:05:41,848 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: os.name=Windows 11
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: os.arch=amd64
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: os.version=10.0
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: file.encoding=UTF-8
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: java.awt.headless=null
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: Max memory     =1073741824
+2025-12-27 03:05:41,849 INFO o.a.j.JMeter: Available Processors =8
+2025-12-27 03:05:41,877 INFO o.a.j.JMeter: Default Locale=English (EN)
+2025-12-27 03:05:41,878 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2025-12-27 03:05:41,878 INFO o.a.j.JMeter: JMeterHome=C:\Program Files\java\apache-jmeter-5.6.3
+2025-12-27 03:05:41,878 INFO o.a.j.JMeter: user.dir  =D:\Coding\CreditXAI
+2025-12-27 03:05:41,879 INFO o.a.j.JMeter: PWD       =D:\Coding\CreditXAI
+2025-12-27 03:05:41,887 INFO o.a.j.JMeter: IP: 192.168.1.38 Name: Soulaimane FullName: host.docker.internal

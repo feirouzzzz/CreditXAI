@@ -130,7 +130,7 @@ mvn verify
 
 #### Unit Tests
 ```
-mvn test -DskipITs
+mvn surefire-report:report   -> target/site/surefire-report.html
 ```
 
 #### Integration Tests
@@ -141,6 +141,12 @@ docker compose -f docker-compose.test.yml up -d      # Run testing containers
 mvn -Dtest=*IT test                                  # run integration tests
 docker compose -f docker-compose.test.yml down -v    # destroy testing containers
 ```
+
+mvn jmeter:configure
+mvn jmeter:jmeter
+
+
+
 ---
 
 ### 1.2 ML

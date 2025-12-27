@@ -1,0 +1,9 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1766801220375,24,Login Request,Non HTTP response code: org.apache.http.conn.HttpHostConnectException,"Non HTTP response message: Connect to localhost:8080 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: connect",Thread Group 1-1,text,false,,2631,0,1,1,http://localhost:8080/api/v1/auth/login,0,0,24
+1766801252495,22,Login Request,Non HTTP response code: org.apache.http.conn.HttpHostConnectException,"Non HTTP response message: Connect to localhost:8080 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: connect",Thread Group 1-1,text,false,,2631,0,1,1,http://localhost:8080/api/v1/auth/login,0,0,22
+1766801265615,28,Login Request,Non HTTP response code: org.apache.http.conn.HttpHostConnectException,"Non HTTP response message: Connect to localhost:8080 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: connect",Thread Group 1-1,text,false,,2631,0,1,1,http://localhost:8080/api/v1/auth/login,0,0,28
+1766801459057,245,Login Request,404,,Thread Group 1-1,text,false,,509,212,1,1,http://localhost:8080/api/v1/auth/login,239,0,23
+1766801631112,69,Login Request,404,,Thread Group 1-1,text,false,,509,212,1,1,http://localhost:8080/api/v1/auth/login,61,0,41
+1766801848274,58,Login Request,404,,Thread Group 1-1,text,false,,509,212,1,1,http://localhost:8080/api/v1/auth/login,49,0,20
+1766801897273,43,Login Request,404,,Thread Group 1-1,text,false,,509,212,1,1,http://localhost:8080/api/v1/auth/login,39,0,22
+1766802133476,220,Login Request,415,,Thread Group 1-1,text,false,,561,205,1,1,http://localhost:8080/auth/login,205,0,96
